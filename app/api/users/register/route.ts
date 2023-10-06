@@ -1,52 +1,26 @@
 import prisma from "@/prisma"
-import { z } from 'zod'
-import bcrypt from 'bcrypt'
-import { redirect } from "next/navigation"
-
-const userSchema = z.object({
-    email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email.' }),
-    name: z.string().min(4, { message: 'Name must be at least 4 characters.' }),
-    password: z.string().min(8, { message: 'Password must be at least 8 characters.'})
-})
+import ValidationSchema from "@/schemas/register"
 
 export async function POST(request: Request){
     try{
         const body = await request.json()
-    
-        
+        ValidationSchema.parse(body)
+
         const { email, name, password } = body
-    
-        const user = await prisma.user.findUnique({
-            where: {
-                email: email
-            }
-        })
-        console.log(user)
-    
-        if(user)
-            return new Response(null, {
-                status: 409,
-                statusText: 'User already exists with this email address.'
-            })
 
-        const hashedPassword = await bcrypt.hash(password, 10)
-    
+        const usedEmail = await prisma.user.findUnique({ where: { email } })
+        if(usedEmail) return new Response("Email already in use.", { status: 409 })
+
+        const usedName = await prisma.user.findUnique({ where: { name } })
+        if(usedName) return new Response("Name already in use.", { status: 409 })
+
         const createdUser = await prisma.user.create({
-            data: {
-                email,
-                name,
-                password: hashedPassword
-            }
+            data: { email, name, password },
         })
 
-        console.log(createdUser)
-
+        return Response.json({ createdUser })
     }
     catch(error){
-        return new Response(null, {
-            status: 400,
-            statusText: 'Server error: ' + error
-        })
+        return new Response('Server error!', { status: 500 })
     }
-
 }

@@ -13,11 +13,7 @@ import { SubmitHandler, useForm } from "react-hook-form"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { z } from "zod"
 
-const ValidationSchema = z.object({
-    // email: z.string().min(1, { message: 'Email is required.' }).email({ message: 'Please enter a valid email.' }),
-    name: z.string().min(4, { message: 'Name must be at least 4 characters.' }),
-    password: z.string().min(8, { message: 'Password must be at least 8 characters.'})
-})
+import ValidationSchema from "@/schemas/login"
 
 type ValidationSchemaType = z.infer<typeof ValidationSchema>
 

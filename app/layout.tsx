@@ -1,5 +1,3 @@
-"use client"
-
 import './globals.css'
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
@@ -7,9 +5,6 @@ import { Inter } from 'next/font/google'
 import Navigation from '@/components/navigation/Navigation'
 import Footer from '@/components/navigation/Footer'
 import clsx from 'clsx'
-
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
-const queryClient = new QueryClient()
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -27,11 +22,9 @@ export default function RootLayout({
       <body className={clsx(inter.className, 'coffee')}>
         <div className='flex flex-col min-h-screen'>
           <Navigation />
-          <QueryClientProvider client={queryClient}>
             <main className='flex flex-grow justify-center items-center'>
               {children}
             </main>
-          </QueryClientProvider>
         </div>
         <Footer />
       </body>
