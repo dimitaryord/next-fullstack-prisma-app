@@ -1,15 +1,4 @@
-'use client'
-
-import { useEffect } from "react"
-
-const getUsers = async () => {
-    console.log(await fetch('/api/users'))
-}
-
 function HomeView() {
-  useEffect(() =>{
-    getUsers()
-  }, [])
 
   return (
     <div className="text-3xl">
